@@ -1,7 +1,7 @@
 import React from 'react'
 import StickerCard from '../cards/StickerCard';
 
-export default function MarketPlace() {
+export default function Marketplace() {
     const meterValue = 50;
 
     const sticker = [
