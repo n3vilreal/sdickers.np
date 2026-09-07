@@ -1,0 +1,59 @@
+Sdickers — Local Setup (macOS, Apple Silicon)
+=============================================
+
+Requirements:
+  - Node.js 20+ (install from nodejs.org, or: brew install node)
+  - A Supabase account (free) — the database and image storage are hosted there,
+    so nothing to install locally.
+
+Step 1 — Get your Supabase credentials
+  1. Create a project at https://supabase.com (or use the existing one).
+  2. Database URL: Dashboard -> Project Settings -> Database -> Connect -> Connection string (URI).
+     Copy it and replace [YOUR-PASSWORD] with your database password.
+  3. Frontend keys: Dashboard -> Project Settings -> API.
+     Copy the Project URL and the anon/publishable key.
+
+Step 2 — Configure the server
+  cd server
+  cp .env.example .env
+  Then edit server/.env and fill in:
+    DATABASE_URL     (from step 1.2)
+    SECRET_KEY       (run: node -e "console.log(require('crypto').randomBytes(48).toString('hex'))")
+    ADMIN_EMAIL / ADMIN_PASSWORD / ADMIN_PHONE / ADMIN_USERNAME  (admin account
+      that gets created automatically on first server start)
+    EMAIL_USER / EMAIL_PASS (optional — Gmail app password for OTP emails)
+  Note: if a password/value contains #, wrap the whole value in double quotes.
+
+Step 3 — Configure the frontend
+  cd frontend
+  cp .env.example .env
+  Then edit frontend/.env and fill in:
+    VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (from step 1.3)
+
+Step 4 — Install dependencies
+  cd server && npm install
+  cd ../frontend && npm install
+
+Step 5 — Create the database tables (one time only)
+  cd server
+  npx knex migrate:latest
+
+Step 6 — Start the backend
+  cd server
+  npm start
+  -> Server running on PORT 3000
+  -> "Database connected successfully"
+  (The admin account is created automatically on first start.)
+
+Step 7 — Start the frontend (in a second terminal)
+  cd frontend
+  npm run dev
+  -> Open http://localhost:5173
+
+Admin login:
+  Open http://localhost:5173/login and log in with the ADMIN_EMAIL /
+  ADMIN_PASSWORD you set in server/.env. The site shows the admin panel
+  (/admin) only to accounts with the admin role.
+
+Stopping:
+  Press Ctrl+C in each terminal.

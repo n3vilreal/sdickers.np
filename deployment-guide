@@ -1,0 +1,105 @@
+Deploying Sdickers to Vercel (free tier)
+=========================================
+Architecture: two Vercel projects from this one repo
+  - sdickers-api   <- deploys the server/ folder (Express API, serverless)
+  - sdickers-web   <- deploys the frontend/ folder (Vite + React site)
+Database + image storage stay on Supabase (no changes needed there).
+
+Prerequisite: push your code to GitHub/GitLab/Bitbucket first.
+(Vercel deploys from git; keep .env files out of git — they're ignored.)
+
+
+----------
+PROJECT 1 — the API (deploy this first)
+----------
+
+1. Go to https://vercel.com -> Sign up / Log in with GitHub.
+
+2. "Add New" -> "Project" -> IMPORT your repository.
+
+3. IMPORTANT settings on the import screen:
+     Framework Preset:    Other            (NOT Express — leave auto-detect off)
+     Root Directory:      server
+     (open "Root Directory" and select the server folder)
+
+4. Open "Environment Variables" and add these (values from your server/.env):
+
+     DATABASE_URL        = postgresql://postgres:YOUR_DB_PASSWORD@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
+                           ^ IMPORTANT: on Vercel use the POOLER connection string,
+                             not db.xxxx.supabase.co. Get it from:
+                             Supabase Dashboard -> Project Settings -> Database ->
+                             Connect -> Connection pooling -> "Transaction mode".
+                             Also append ?pgbouncer=true to the end:
+                             ...postgres?pgbouncer=true
+
+     SECRET_KEY           = (same value as your server/.env SECRET_KEY)
+
+     ADMIN_EMAIL          = sdickers.np@gmail.com
+     ADMIN_PASSWORD       = "Sdickers@#$1010"   (same as server/.env, with quotes NOT needed
+                                                  in Vercel — paste the raw password)
+     ADMIN_PHONE          = 9765223740
+     ADMIN_USERNAME       = Sdickers admin
+
+     EMAIL_USER          = (optional, Gmail for OTP emails)
+     EMAIL_PASS          = (optional, Gmail app password)
+
+     CLIENT_ORIGIN       = https://sdickers-web.vercel.app
+                           (your frontend URL from Project 2 below — add it now,
+                            you can edit it later if the name differs)
+
+5. Click "Deploy". After it finishes, click your project -> Settings -> Domains
+   to see the API URL, e.g.  https://sdickers-api.vercel.app
+   Test it in a browser: you should see  {"message":"Sdickers API is running..."}
+
+
+----------
+PROJECT 2 — the frontend
+----------
+
+1. "Add New" -> "Project" -> IMPORT the same repository again.
+
+2. IMPORTANT settings:
+     Framework Preset:    Vite
+     Root Directory:      frontend
+
+3. Environment Variables:
+
+     VITE_API_URL         = https://sdickers-api.vercel.app/api
+                            (your API URL + /api)
+
+     VITE_SUPABASE_URL    = https://aytpwcbkyhvcmjznbwaz.supabase.co
+     VITE_SUPABASE_ANON_KEY = sb_publishable_lquozsTzQLJUOWm6vOYXVA_5zAWmx1D
+
+4. Click "Deploy". Your site will be live at  https://sdickers-web.vercel.app
+   (the exact name depends on what's free — check Settings -> Domains).
+
+5. FIX CORS: the API allows only CLIENT_ORIGIN. If your frontend URL ended up
+   different from what you entered in Project 1:
+     - open sdickers-api project -> Settings -> Environment Variables
+     - update CLIENT_ORIGIN to the real frontend URL
+     - Deployments tab -> ... menu -> Redeploy
+
+6. Fix the frontend URL too if needed:
+     VITE_API_URL must point to the real API URL + /api.
+     (Edit in sdickers-web -> Settings -> Environment Variables, then Redeploy.)
+
+
+----------
+Verify the deployment
+----------
+  - https://sdickers-web.vercel.app           -> the website loads
+  - Login with the admin credentials          -> works
+  - Admin -> Products -> upload an image      -> image uploads to Supabase
+  - Place a test order                         -> order saved in Supabase Postgres
+
+
+----------
+Notes
+----------
+  - Local dev is unaffected: cd server && npm start / cd frontend && npm run dev
+  - Every git push auto-deploys both projects.
+  - Free Vercel tier: 100GB bandwidth/month, plenty for a small store.
+  - If email OTP isn't configured, "Forgot password" returns an error — that's
+    expected until EMAIL_USER/EMAIL_PASS are set (Gmail App Password).
+  - Supabase free tier: pauses after 1 week of inactivity. Visit the dashboard
+    to restore it if the site suddenly can't reach the database.

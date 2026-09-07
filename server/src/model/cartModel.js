@@ -1,0 +1,75 @@
+const knex = require("../database/knex");
+
+const getOrCreateCart = async (userId) => {
+  let cart = await knex("carts").where({ user_id: userId }).first();
+  if (!cart) {
+    const [row] = await knex("carts").insert({ user_id: userId }).returning("id");
+    cart = { id: row.id, user_id: userId };
+  }
+  return cart;
+};
+
+const findItem = (cartId, productId) =>
+  knex("cart_items").where({ cart_id: cartId, product_id: productId }).first();
+
+const addItem = (cartId, productId, quantity) =>
+  knex("cart_items").insert({ cart_id: cartId, product_id: productId, quantity }).returning("*");
+
+const bumpItem = (cartId, productId, quantity) =>
+  knex("cart_items").where({ cart_id: cartId, product_id: productId }).update({ quantity }).returning("*");
+
+const shapeCartProduct = (p) => ({
+  _id: p.id,
+  id: p.id,
+  productName: p.product_name,
+  productDescription: p.product_description,
+  productImage: p.product_image,
+  productStockQty: p.product_stock_qty,
+  productPrice: Number(p.product_price),
+  productStatus: p.product_status,
+  productCategory: p.product_category,
+});
+
+const getCartWithItems = (userId) =>
+  knex("carts").where({ user_id: userId }).first().then(async (cart) => {
+    if (!cart) return { items: [] };
+    const items = await knex("cart_items")
+      .where({ cart_id: cart.id })
+      .select("id", "product_id", "quantity");
+    const productIds = items.map((i) => i.product_id);
+    const products = productIds.length
+      ? await knex("products").whereIn("id", productIds)
+      : [];
+    const productMap = Object.fromEntries(products.map((p) => [p.id, p]));
+    return {
+      ...cart,
+      items: items.map((i) => ({
+        id: i.id,
+        product: productMap[i.product_id] ? shapeCartProduct(productMap[i.product_id]) : null,
+        quantity: i.quantity,
+      })),
+    };
+  });
+
+const updateItem = (cartId, productId, quantity) =>
+  knex("cart_items").where({ cart_id: cartId, product_id: productId }).update({ quantity }).returning("*");
+
+const removeItem = (cartId, productId) =>
+  knex("cart_items").where({ cart_id: cartId, product_id: productId }).del();
+
+const clear = (cartId) => knex("cart_items").where({ cart_id: cartId }).del();
+
+const findByProduct = (cartId, productId) =>
+  knex("cart_items").where({ cart_id: cartId, product_id: productId }).first();
+
+module.exports = {
+  getOrCreateCart,
+  findItem,
+  addItem,
+  bumpItem,
+  getCartWithItems,
+  updateItem,
+  removeItem,
+  clear,
+  findByProduct,
+};
