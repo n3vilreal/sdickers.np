@@ -34,9 +34,9 @@ export default function Login() {
     }
   };
   return (
-    <div className="w-screen h-screen flex bg-black">
+    <div className="w-screen min-h-screen flex flex-col md:flex-row bg-black">
       <div
-        className="h-full w-[50%] flex flex-col justify-center p-28 bg-contain"
+        className="hidden md:flex h-full w-[50%] flex-col justify-center p-28 bg-contain"
         style={{ backgroundImage: `url(${LeftImage})` }}
       >
         <span className="text-xl text-white font-bold">SDICKERS</span>
@@ -47,7 +47,7 @@ export default function Login() {
           Access your vault, track your orders, and get ready for the next drop.
         </span>
       </div>
-      <div className="h-full w-[50%] bg-[#111111] flex flex-col items-center justify-around">
+      <div className="min-h-screen md:h-full w-full md:w-[50%] bg-[#111111] flex flex-col items-center justify-around px-6 py-12 md:py-0">
         <form
           onSubmit={handleLogin}
           className="h-full w-[50%] flex flex-col justify-center gap-y-10"

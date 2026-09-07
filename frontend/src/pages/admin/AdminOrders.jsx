@@ -51,7 +51,7 @@ export default function AdminOrders() {
       ) : orders.length === 0 ? (
         <div className="text-[#8a8a8a] text-sm">No orders yet.</div>
       ) : (
-        <div className="bg-[#181818] border border-[#2e2e2e] rounded-2xl overflow-hidden">
+        <div className="bg-[#181818] border border-[#2e2e2e] rounded-2xl overflow-x-auto">
           <table className="w-full text-left text-sm min-w-[800px]">
             <thead className="text-[#8a8a8a] text-xs uppercase border-b border-[#2e2e2e]">
               <tr>

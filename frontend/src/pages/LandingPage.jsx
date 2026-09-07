@@ -50,13 +50,13 @@ export default function
 () {
   return (
     <>
-    <div id='main' className=' w-screen h-180 bg-[#111111] flex justify-center items-center'>
-        <div id="container" className='w-[50%] flex justify-between items-center'>
-            <div id="left" className='flex flex-col w-[50%] gap-y-5'>
+    <div id='main' className='w-screen min-h-180 md:h-180 bg-[#111111] flex justify-center items-center px-6 py-16 md:py-0'>
+        <div id="container" className='w-full md:w-[50%] flex flex-col md:flex-row justify-between items-center gap-y-10 md:gap-y-0'>
+            <div id="left" className='flex flex-col w-full md:w-[50%] gap-y-5 items-center md:items-start text-center md:text-left'>
                 <span className='text-[#8a8a8a] text-[11px]'>
                     SDICKERS DROP 003 - SECURE THE BATCH
                 </span>
-                <span className='font-sans text-white text-6xl font-bold'>
+                <span className='font-sans text-white text-4xl sm:text-5xl md:text-6xl font-bold'>
                     THE ART OF ADHESION
                 </span>
                 <span className='text-[#8a8a8a] text-[11px]'>
@@ -67,22 +67,22 @@ export default function
                 </span>
             </div>
             <div id="right">
-                <img src={sticker} alt="sticker" className='h-64 hover:scale-110 duration-500 ease-in-out'/>
+                <img src={sticker} alt="sticker" className='h-48 sm:h-56 md:h-64 hover:scale-110 duration-500 ease-in-out'/>
             </div>
         </div>
     </div>
-    <div className='h-12.5 w-screen bg-[#181818] text-white flex justify-center text-xl items-center text-center font-bold gap-x-15'>
+    <div className='min-h-12.5 w-screen bg-[#181818] text-white flex flex-wrap justify-center text-base sm:text-xl items-center text-center font-bold gap-x-15 gap-y-2 py-3 px-4'>
            <span>NEW DROP LIVE</span>
            <div className='h-[5px] w-[5px] bg-[#00ff66] rounded-full'></div>
            <span>NEW DROP LIVE</span>
            <div className='h-[5px] w-[5px] bg-[#00ff66] rounded-full'></div>
            <span>NEW DROP LIVE</span>
     </div>
-    <div id='main' className=' w-screen h-180 bg-[#111111] flex justify-center items-center'>
-        <div className='flex flex-col items-center justify-center gap-y-5'>
-            <h1 className='font-sans text-white text-3xl font-bold'>TRENDING COLLECTIONS</h1>
-            <div>
-                <div className='flex gap-x-4'>
+    <div id='main' className='w-screen min-h-180 bg-[#111111] flex justify-center items-center px-4 py-16 md:py-0 md:h-180'>
+        <div className='flex flex-col items-center justify-center gap-y-5 w-full'>
+            <h1 className='font-sans text-white text-2xl sm:text-3xl font-bold text-center'>TRENDING COLLECTIONS</h1>
+            <div className='w-full'>
+                <div className='flex gap-x-4 overflow-x-auto md:justify-center pb-2 -mx-4 px-4 md:mx-0 md:px-0'>
                     {
                         trending.map((item) => (
                             <TrendingCollections
@@ -96,30 +96,30 @@ export default function
             </div>
         </div>
     </div>
-    <div className='w-screen h-80 bg-[#00ff66] flex justify-center items-center'>
-        <div className='flex flex-col justify-center items-center w-[60%] font-sans gap-y-7'>
-            <h1 className='text-4xl font-semibold'>JOIN THE CULTURE</h1>
+    <div className='w-screen bg-[#00ff66] flex justify-center items-center px-6 py-12 md:py-0 md:h-80'>
+        <div className='flex flex-col justify-center items-center w-full md:w-[60%] font-sans gap-y-7 text-center'>
+            <h1 className='text-2xl sm:text-3xl md:text-4xl font-semibold'>JOIN THE CULTURE</h1>
             <p className='text-sm'>Get access to Premium Drops, Exclusive Merch and Members-Only Pricing.</p>
             <div className='flex justify-center items-center w-44 h-12 bg-black text-xs font-semibold text-white cursor-pointer hover:border-2 hover:border-black hover:bg-[#0000002f] hover:text-black duration-500 ease-in-out'>BECOME A MEMBER</div>
         </div>
     </div>
-    <div className='w-screen h-[550px] bg-[#181818] flex justify-center items-center font-sans'>
-        <div className='w-[80%] flex flex-col items-center justify-center space-y-6'>
-            <div className='flex w-[100%] justify-around'>
+    <div className='w-screen bg-[#181818] flex justify-center items-center font-sans px-6 py-12 md:py-0 md:h-[550px]'>
+        <div className='w-full md:w-[80%] flex flex-col items-center justify-center space-y-6'>
+            <div className='flex w-full flex-col sm:flex-row justify-around gap-y-8 gap-x-4 py-2'>
                 <div className='flex flex-col items-center justify-center gap-y-2'>
-                    <span className='text-6xl font-semibold text-white'>{shippedNumbers - 1} +</span>
+                    <span className='text-4xl sm:text-5xl md:text-6xl font-semibold text-white'>{shippedNumbers - 1} +</span>
                     <span className='text-[#8a8a8a] text-xs'>Stickers Shipped</span>
                 </div>
                 <div className='flex flex-col items-center justify-center gap-y-2'>
-                    <span className='text-6xl font-semibold text-white'>{averageRating}/5</span>
+                    <span className='text-4xl sm:text-5xl md:text-6xl font-semibold text-white'>{averageRating}/5</span>
                     <span className='text-[#8a8a8a] text-xs'>Average Rating</span>
                 </div>
                 <div className='flex flex-col items-center justify-center gap-y-2'>
-                    <span className='text-6xl font-semibold text-white'>{collectorNumbers - 1} +</span>
+                    <span className='text-4xl sm:text-5xl md:text-6xl font-semibold text-white'>{collectorNumbers - 1} +</span>
                     <span className='text-[#8a8a8a] text-xs'>Active Collectors</span>
                 </div>
             </div>
-            <div className='flex w-[100%] justify-around h-auto'>
+            <div className='flex w-full overflow-x-auto sm:justify-around h-auto gap-x-4 pb-2'>
                 {
                     reviews.map((item)=>(
                         <Reviews

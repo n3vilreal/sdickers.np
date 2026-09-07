@@ -78,7 +78,7 @@ export default function Cart() {
             {validItems.map((item) => (
               <div
                 key={item.product._id}
-                className="flex items-center gap-5 bg-[#181818] border border-[#2e2e2e] rounded-2xl p-4"
+                className="flex items-center gap-3 sm:gap-5 bg-[#181818] border border-[#2e2e2e] rounded-2xl p-4 flex-wrap"
               >
                 <div className="w-24 h-24 bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0">
                   <img

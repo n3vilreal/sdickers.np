@@ -51,9 +51,9 @@ export default function Signup() {
     }
   };
   return (
-    <div className="w-screen h-screen flex bg-black">
+    <div className="w-screen min-h-screen flex flex-col md:flex-row bg-black">
       <div
-        className="h-full w-[50%] flex flex-col justify-center p-28"
+        className="hidden md:flex h-full w-[50%] flex-col justify-center p-28"
         style={{ backgroundImage: `url(${LeftImage})` }}
       >
         <span className="text-xl text-white font-bold mb-7">SDICKERS</span>
@@ -80,8 +80,8 @@ export default function Signup() {
           </div>
         </div>
       </div>
-      <div className="h-full w-[50%] bg-[#111111] flex items-center justify-center">
-        <form onSubmit={handleSignup} className="flex flex-col gap-y-5 w-[50%]">
+      <div className="min-h-screen md:h-full w-full md:w-[50%] bg-[#111111] flex items-center justify-center px-6 py-12 md:py-0">
+        <form onSubmit={handleSignup} className="flex flex-col gap-y-5 w-full sm:w-[50%]">
           <div className="flex flex-col">
             <span className="text-3xl text-white font-semibold">
               JOIN SDICKERS

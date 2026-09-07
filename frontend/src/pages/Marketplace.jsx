@@ -83,9 +83,29 @@ export default function Marketplace() {
   }
 
   return (
-    <div className="w-screen min-h-screen bg-[#111111] pt-12 pb-12">
-      <div className="flex w-full h-full">
-        <div className="w-[15%] flex flex-col items-center gap-y-14">
+    <div className="w-screen min-h-screen bg-[#111111] pt-6 pb-12 md:pt-12 md:pb-12 px-4 md:px-0">
+      <div className="flex flex-col md:flex-row w-full h-full">
+        {/* Mobile: horizontal category chips */}
+        <div className="md:hidden mb-4 overflow-x-auto -mx-4 px-4">
+          <div className="flex gap-x-3 w-max pb-1">
+            {categories.map((c) => (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`whitespace-nowrap h-9 px-4 rounded-full border text-xs font-semibold capitalize cursor-pointer ${
+                  category === c
+                    ? "bg-[#00ff66] text-black border-transparent"
+                    : "border-[#2e2e2e] text-[#8a8a8a]"
+                }`}
+              >
+                {c === "all" ? "All" : c}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: sidebar */}
+        <div className="hidden md:flex w-[15%] flex-col items-center gap-y-14">
           <div className="flex flex-col text-xs text-[#8a8a8a] gap-y-4 w-[60%]">
             <span className="font-semibold text-[#00ff66]">CATEGORIES</span>
             {categories.map((c) => (
@@ -102,19 +122,19 @@ export default function Marketplace() {
           </div>
         </div>
 
-        <div className="flex flex-col w-[85%] px-16">
-          <div className="flex justify-between w-full items-center">
+        <div className="flex flex-col w-full md:w-[85%] px-0 md:px-16">
+          <div className="flex flex-row justify-between w-full items-center gap-x-4">
             <div className="flex flex-col">
-              <span className="text-2xl text-white font-semibold">SHOP ALL</span>
+              <span className="text-xl sm:text-2xl text-white font-semibold">SHOP ALL</span>
               <span className="text-xs text-[#515151]">
                 Showing {sorted.length} sticker{sorted.length === 1 ? "" : "s"}
               </span>
             </div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center flex-shrink-0">
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="text-white text-xs font-semibold p-3 rounded-xl border-1 border-[#2e2e2e] bg-[#181818] cursor-pointer"
+                className="text-white text-xs font-semibold p-2 sm:p-3 rounded-xl border-1 border-[#2e2e2e] bg-[#181818] cursor-pointer"
               >
                 <option value="">FEATURED</option>
                 <option value="priceAsc">PRICE: LOW TO HIGH</option>
@@ -140,7 +160,7 @@ export default function Marketplace() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-10 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 mt-6">
               {sorted.map((item) => (
                 <StickerCard
                   key={item._id || item.id}
