@@ -29,7 +29,9 @@ exports.createProduct = async (req, res) => {
       !productName ||
       !productDescription ||
       !productPrice ||
-      !productStockQty ||
+      productStockQty === undefined ||
+      productStockQty === null ||
+      productStockQty === "" ||
       !productCategory
     ) {
       return res.status(400).json({ message: "Please provide all the details" });
