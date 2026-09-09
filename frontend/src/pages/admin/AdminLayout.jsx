@@ -5,6 +5,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 const links = [
   { to: "/admin", label: "Dashboard", end: true },
   { to: "/admin/products", label: "Products" },
+  { to: "/admin/packs", label: "Packs" },
   { to: "/admin/users", label: "Users" },
   { to: "/admin/orders", label: "Orders" },
 ];

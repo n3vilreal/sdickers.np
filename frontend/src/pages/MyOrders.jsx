@@ -74,7 +74,10 @@ export default function MyOrders() {
                     className="flex justify-between text-sm text-[#8a8a8a]"
                   >
                     <span>
-                      {item.product?.productName || "Sticker"} x {item.quantity}
+                      {item.pack
+                        ? `${item.pack.packName} (Pack)`
+                        : item.product?.productName || "Sticker"}{" "}
+                      x {item.quantity}
                     </span>
                     <span className="text-white">Rs. {item.price}</span>
                   </div>

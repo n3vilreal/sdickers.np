@@ -14,7 +14,7 @@ export default function
                 <span className='text-white font-semibold text-xs'>SHOP</span>
                 <span className='flex flex-col text-[#8a8a8a] text-xs gap-y-3'>
                     <span>New Drops</span>
-                    <span>Collections</span>
+                    <span>Packs</span>
                     <span>Best Sellers</span>
                     <span>Gift Cards</span>
                 </span>

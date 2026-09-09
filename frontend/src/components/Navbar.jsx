@@ -45,9 +45,9 @@ export default function Navbar() {
           </li>
           <li
             className="hover:text-[#00ff66] cursor-pointer duration-500"
-            onClick={() => go("/marketplace")}
+            onClick={() => go("/packs")}
           >
-            COLLECTIONS
+            PACKS
           </li>
           <li
             className="hover:text-[#00ff66] cursor-pointer duration-500"
@@ -119,7 +119,7 @@ export default function Navbar() {
     {menuOpen && (
       <div className="md:hidden bg-black border-t border-[#2e2e2e] px-6 py-4 flex flex-col gap-y-4 text-sm">
         <span className="hover:text-[#00ff66] cursor-pointer duration-500" onClick={() => go("/marketplace")}>DROPS</span>
-        <span className="hover:text-[#00ff66] cursor-pointer duration-500" onClick={() => go("/marketplace")}>COLLECTIONS</span>
+        <span className="hover:text-[#00ff66] cursor-pointer duration-500" onClick={() => go("/packs")}>PACKS</span>
         <span className="hover:text-[#00ff66] cursor-pointer duration-500" onClick={() => go("/marketplace")}>BEST SELLERS</span>
         {isLoggedIn() && (
           <span className="hover:text-[#00ff66] cursor-pointer duration-500" onClick={() => go("/orders")}>MY ORDERS</span>

@@ -2,9 +2,12 @@ const Order = require("../../model/orderModel");
 
 const shapeOrder = async (o) => {
   const items = await Order.findItemsByOrder(o.id);
-  const productIds = items.map((i) => i.product_id);
+  const productIds = items.map((i) => i.product_id).filter(Boolean);
+  const packIds = items.map((i) => i.pack_id).filter(Boolean);
   const products = await Order.getProductsByIds(productIds);
+  const packs = await Order.getPacksByIds(packIds);
   const pMap = Object.fromEntries(products.map((p) => [p.id, p]));
+  const packMap = Object.fromEntries(packs.map((p) => [p.id, p]));
   return {
     _id: o.id,
     id: o.id,
@@ -19,14 +22,27 @@ const shapeOrder = async (o) => {
     createdAt: o.created_at,
     updatedAt: o.updated_at,
     items: items.map((i) => ({
-      product: pMap[i.product_id]
-        ? {
-            _id: pMap[i.product_id].id,
-            id: pMap[i.product_id].id,
-            productName: pMap[i.product_id].product_name,
-            productImage: pMap[i.product_id].product_image,
-            productPrice: Number(pMap[i.product_id].product_price),
-          }
+      product: i.product_id
+        ? pMap[i.product_id]
+          ? {
+              _id: pMap[i.product_id].id,
+              id: pMap[i.product_id].id,
+              productName: pMap[i.product_id].product_name,
+              productImage: pMap[i.product_id].product_image,
+              productPrice: Number(pMap[i.product_id].product_price),
+            }
+          : null
+        : null,
+      pack: i.pack_id
+        ? packMap[i.pack_id]
+          ? {
+              _id: packMap[i.pack_id].id,
+              id: packMap[i.pack_id].id,
+              packName: packMap[i.pack_id].pack_name,
+              packImage: packMap[i.pack_id].pack_image,
+              packPrice: Number(packMap[i.pack_id].pack_price),
+            }
+          : null
         : null,
       quantity: i.quantity,
       price: Number(i.price),

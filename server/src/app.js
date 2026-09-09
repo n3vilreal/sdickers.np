@@ -29,11 +29,15 @@ const productRoute = require("./routes/productRoute");
 const orderRoute = require("./routes/orderRoute");
 const cartRoute = require("./routes/cartRoute");
 const userRoute = require("./routes/userRoute");
+const packRoute = require("./routes/packRoute");
+const reviewRoute = require("./routes/reviewRoute");
 app.use("/api", authRoute);
 app.use("/api", productRoute);
 app.use("/api", orderRoute);
 app.use("/api", cartRoute);
 app.use("/api", userRoute);
+app.use("/api", packRoute);
+app.use("/api", reviewRoute);
 app.get("/", (req, res) => {
   res.json({
     message: "Sdickers API is running...",

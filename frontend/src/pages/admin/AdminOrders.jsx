@@ -128,8 +128,10 @@ export default function AdminOrders() {
                               className="flex justify-between text-xs text-[#8a8a8a] max-w-md"
                             >
                               <span>
-                                {item.product?.productName || "Sticker"} x{" "}
-                                {item.quantity}
+                                {item.pack
+                                  ? `${item.pack.packName} (Pack)`
+                                  : item.product?.productName || "Sticker"}{" "}
+                                x {item.quantity}
                               </span>
                               <span className="text-white">
                                 Rs. {item.price}

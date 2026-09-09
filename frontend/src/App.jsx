@@ -7,6 +7,8 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Marketplace from './pages/Marketplace'
 import ProductDetail from './pages/ProductDetail'
+import Packs from './pages/Packs'
+import PackDetail from './pages/PackDetail'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import MyOrders from './pages/MyOrders'
@@ -16,6 +18,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminProducts from './pages/admin/AdminProducts'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminOrders from './pages/admin/AdminOrders'
+import AdminPacks from './pages/admin/AdminPacks'
 function App() {
   const location = useLocation()
   const hideChrome =
@@ -31,6 +34,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/packs" element={<Packs />} />
+        <Route path="/pack/:id" element={<PackDetail />} />
         <Route
           path="/cart"
           element={
@@ -65,6 +70,7 @@ function App() {
         >
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
+          <Route path="packs" element={<AdminPacks />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="orders" element={<AdminOrders />} />
         </Route>

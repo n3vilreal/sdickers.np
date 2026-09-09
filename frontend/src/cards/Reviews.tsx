@@ -10,7 +10,13 @@ export default function Reviews({stars, reviewDescription, userName, userImage})
                 "{reviewDescription}"
             </div>
             <div className='text-white font-semibold flex gap-x-2 items-center'>
-                <img src={userImage} alt="" className='h-[40px] w-[40px] rounded-full'/>
+                {userImage ? (
+                    <img src={userImage} alt="" className='h-[40px] w-[40px] rounded-full'/>
+                ) : (
+                    <div className='h-[40px] w-[40px] rounded-full bg-[#00ff66] text-black flex justify-center items-center text-lg font-bold'>
+                        {userName?.charAt(0)?.toUpperCase() || "?"}
+                    </div>
+                )}
                 {userName}
             </div>
         </div>

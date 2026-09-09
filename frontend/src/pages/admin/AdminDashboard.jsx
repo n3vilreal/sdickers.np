@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ products: 0, users: 0, orders: 0 });
+  const [stats, setStats] = useState({ products: 0, users: 0, orders: 0, packs: 0 });
   const [revenue, setRevenue] = useState(0);
   const [recent, setRecent] = useState([]);
   useEffect(() => {
     (async () => {
       try {
-        const [productsRes, usersRes, ordersRes] = await Promise.all([
+        const [productsRes, usersRes, ordersRes, packsRes] = await Promise.all([
           api.get("/products"),
           api.get("/users"),
           api.get("/orders"),
+          api.get("/packs"),
         ]);
         setStats({
           products: productsRes.data.total ?? productsRes.data.data.length,
           users: usersRes.data.total ?? usersRes.data.data.length,
           orders: ordersRes.data.total ?? ordersRes.data.data.length,
+          packs: packsRes.data.total ?? packsRes.data.data.length,
         });
         const orders = ordersRes.data.data;
         setRevenue(orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0));
@@ -30,6 +32,7 @@ export default function AdminDashboard() {
       <h1 className="text-3xl font-bold text-white mb-8">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard label="Products" value={stats.products} />
+        <StatCard label="Packs" value={stats.packs} />
         <StatCard label="Users" value={stats.users} />
         <StatCard label="Orders" value={stats.orders} />
         <StatCard label="Revenue" value={`Rs. ${revenue}`} />

@@ -6,7 +6,8 @@ const create = async (data, items) => {
     if (items && items.length) {
       const rows = items.map((it) => ({
         order_id: order.id,
-        product_id: it.product,
+        product_id: it.product || null,
+        pack_id: it.pack || null,
         quantity: it.quantity,
         price: it.price,
       }));
@@ -37,6 +38,9 @@ const remove = (id) => knex("orders").where({ id }).del();
 const getProductsByIds = (ids) =>
   ids.length ? knex("products").whereIn("id", ids) : Promise.resolve([]);
 
+const getPacksByIds = (ids) =>
+  ids.length ? knex("packs").whereIn("id", ids) : Promise.resolve([]);
+
 module.exports = {
   create,
   findMyOrders,
@@ -47,4 +51,5 @@ module.exports = {
   updateStatus,
   remove,
   getProductsByIds,
+  getPacksByIds,
 };

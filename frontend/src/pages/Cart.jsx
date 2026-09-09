@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 const PLACEHOLDER =
   "https://placehold.co/120x120/181818/00ff66?text=Sticker";
+const PACK_PLACEHOLDER =
+  "https://placehold.co/120x120/181818/00ff66?text=Pack";
 export default function Cart() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
@@ -21,18 +23,26 @@ export default function Cart() {
   useEffect(() => {
     fetchCart();
   }, []);
-  const updateQty = async (productId, quantity) => {
+  const updateQty = async (item, quantity) => {
     if (quantity < 1) return;
     try {
-      await api.patch(`/cart/update/${productId}`, { quantity });
+      if (item.pack) {
+        await api.patch(`/cart/update/pack/${item.pack._id}`, { quantity });
+      } else {
+        await api.patch(`/cart/update/${item.product._id}`, { quantity });
+      }
       fetchCart();
     } catch (error) {
       alert(error.response?.data?.message || "Could not update quantity");
     }
   };
-  const removeItem = async (productId) => {
+  const removeItem = async (item) => {
     try {
-      await api.delete(`/cart/remove/${productId}`);
+      if (item.pack) {
+        await api.delete(`/cart/remove/pack/${item.pack._id}`);
+      } else {
+        await api.delete(`/cart/remove/${item.product._id}`);
+      }
       fetchCart();
     } catch (error) {
       alert(error.response?.data?.message || "Could not remove item");
@@ -47,11 +57,11 @@ export default function Cart() {
       alert(error.response?.data?.message || "Could not clear cart");
     }
   };
-  const validItems = items.filter((item) => item.product);
-  const total = validItems.reduce(
-    (sum, item) => sum + item.product.productPrice * item.quantity,
-    0,
-  );
+  const validItems = items.filter((item) => item.product || item.pack);
+  const itemPrice = (item) =>
+    item.pack ? item.pack.packPrice : item.product.productPrice;
+  const itemTotal = (item) => itemPrice(item) * item.quantity;
+  const total = validItems.reduce((sum, item) => sum + itemTotal(item), 0);
   if (loading) {
     return (
       <div className="w-screen min-h-screen bg-[#111111] flex items-center justify-center text-[#8a8a8a]">
@@ -75,64 +85,69 @@ export default function Cart() {
       ) : (
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="flex-1 flex flex-col gap-4">
-            {validItems.map((item) => (
-              <div
-                key={item.product._id}
-                className="flex items-center gap-3 sm:gap-5 bg-[#181818] border border-[#2e2e2e] rounded-2xl p-4 flex-wrap"
-              >
-                <div className="w-24 h-24 bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0">
-                  <img
-                    src={item.product.productImage || PLACEHOLDER}
-                    alt={item.product.productName}
-                    onError={(e) => {
-                      e.currentTarget.src = PLACEHOLDER;
-                    }}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div
-                    className="text-white font-semibold cursor-pointer hover:text-[#00ff66]"
-                    onClick={() => navigate(`/product/${item.product._id}`)}
-                  >
-                    {item.product.productName}
-                  </div>
-                  <div className="text-xs text-[#8a8a8a] uppercase">
-                    {item.product.productCategory}
-                  </div>
-                  <div className="text-[#00ff66] font-bold mt-1">
-                    Rs. {item.product.productPrice}
-                  </div>
-                </div>
-                <div className="flex items-center border border-[#2e2e2e] rounded-lg">
-                  <button
-                    onClick={() =>
-                      updateQty(item.product._id, item.quantity - 1)
-                    }
-                    className="w-8 h-8 text-white cursor-pointer"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center text-white">
-                    {item.quantity}
-                  </span>
-                  <button
-                    onClick={() =>
-                      updateQty(item.product._id, item.quantity + 1)
-                    }
-                    className="w-8 h-8 text-white cursor-pointer"
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  onClick={() => removeItem(item.product._id)}
-                  className="text-red-500 text-xs font-semibold cursor-pointer hover:underline"
+            {validItems.map((item) => {
+              const isPack = !!item.pack;
+              const entry = isPack ? item.pack : item.product;
+              return (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-3 sm:gap-5 bg-[#181818] border border-[#2e2e2e] rounded-2xl p-4 flex-wrap"
                 >
-                  REMOVE
-                </button>
-              </div>
-            ))}
+                  <div className="w-24 h-24 bg-white rounded-xl flex items-center justify-center p-2 flex-shrink-0 relative">
+                    <img
+                      src={entry.productImage || entry.packImage || (isPack ? PACK_PLACEHOLDER : PLACEHOLDER)}
+                      alt={isPack ? entry.packName : entry.productName}
+                      onError={(e) => {
+                        e.currentTarget.src = isPack ? PACK_PLACEHOLDER : PLACEHOLDER;
+                      }}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div
+                      className="text-white font-semibold cursor-pointer hover:text-[#00ff66] flex items-center gap-2"
+                      onClick={() => navigate(isPack ? `/pack/${entry._id}` : `/product/${entry._id}`)}
+                    >
+                      {isPack ? entry.packName : entry.productName}
+                      {isPack && (
+                        <span className="bg-[#00ff66] text-black text-[9px] font-bold px-2 py-0.5 rounded-full">
+                          PACK
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-[#8a8a8a] uppercase">
+                      {isPack ? "Sticker Pack" : entry.productCategory}
+                    </div>
+                    <div className="text-[#00ff66] font-bold mt-1">
+                      Rs. {itemPrice(item)}
+                    </div>
+                  </div>
+                  <div className="flex items-center border border-[#2e2e2e] rounded-lg">
+                    <button
+                      onClick={() => updateQty(item, item.quantity - 1)}
+                      className="w-8 h-8 text-white cursor-pointer"
+                    >
+                      -
+                    </button>
+                    <span className="w-8 text-center text-white">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateQty(item, item.quantity + 1)}
+                      className="w-8 h-8 text-white cursor-pointer"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => removeItem(item)}
+                    className="text-red-500 text-xs font-semibold cursor-pointer hover:underline"
+                  >
+                    REMOVE
+                  </button>
+                </div>
+              );
+            })}
             <button
               onClick={clearCart}
               className="self-start text-xs text-[#8a8a8a] hover:text-red-500 cursor-pointer mt-2"

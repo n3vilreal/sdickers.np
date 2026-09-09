@@ -18,7 +18,7 @@ export default function Checkout() {
   const fetchCart = async () => {
     try {
       const res = await api.get("/cart");
-      setItems((res.data.data?.items || []).filter((i) => i.product));
+      setItems((res.data.data?.items || []).filter((i) => i.product || i.pack));
     } catch (error) {
       console.log(error);
     } finally {
@@ -28,8 +28,10 @@ export default function Checkout() {
   useEffect(() => {
     fetchCart();
   }, []);
+  const itemPrice = (item) =>
+    item.pack ? item.pack.packPrice : item.product.productPrice;
   const total = items.reduce(
-    (sum, item) => sum + item.product.productPrice * item.quantity,
+    (sum, item) => sum + itemPrice(item) * item.quantity,
     0,
   );
   const handleChange = (e) => {
@@ -40,11 +42,19 @@ export default function Checkout() {
     if (items.length === 0) {
       return alert("Your cart is empty.");
     }
-    const orderItems = items.map((item) => ({
-      product: item.product._id,
-      quantity: item.quantity,
-      price: item.product.productPrice,
-    }));
+    const orderItems = items.map((item) =>
+      item.pack
+        ? {
+            pack: item.pack._id,
+            quantity: item.quantity,
+            price: item.pack.packPrice,
+          }
+        : {
+            product: item.product._id,
+            quantity: item.quantity,
+            price: item.product.productPrice,
+          }
+    );
     try {
       setPlacing(true);
       await api.post("/order", {
@@ -136,14 +146,17 @@ export default function Checkout() {
           <div className="flex flex-col gap-3">
             {items.map((item) => (
               <div
-                key={item.product._id}
+                key={item.id}
                 className="flex justify-between text-sm text-[#8a8a8a]"
               >
                 <span className="truncate mr-2">
-                  {item.product.productName} x {item.quantity}
+                  {item.pack
+                    ? `${item.pack.packName} (Pack)`
+                    : item.product.productName}{" "}
+                  x {item.quantity}
                 </span>
                 <span className="text-white flex-shrink-0">
-                  Rs. {item.product.productPrice * item.quantity}
+                  Rs. {itemPrice(item) * item.quantity}
                 </span>
               </div>
             ))}
