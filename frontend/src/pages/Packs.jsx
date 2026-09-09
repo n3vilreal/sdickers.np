@@ -61,8 +61,6 @@ export default function Packs() {
     );
   }
 
-  const visible = packs.filter((p) => p.packStatus === "available");
-
   return (
     <div className="w-screen min-h-screen bg-[#111111] pt-6 pb-12 md:pt-12 md:pb-12 px-4 md:px-16">
       <div className="flex flex-col w-full">
@@ -72,7 +70,7 @@ export default function Packs() {
             Grab a curated pack — multiple stickers, one click, no picking required.
           </span>
         </div>
-        {visible.length === 0 ? (
+        {packs.length === 0 ? (
           <div className="flex flex-col items-start gap-4 mt-10">
             <span className="text-[#8a8a8a] text-sm">
               No packs available yet. Check back soon!
@@ -86,14 +84,16 @@ export default function Packs() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
-            {visible.map((item) => (
+            {packs.map((item) => (
               <PackCard
                 key={item._id || item.id}
                 id={item._id || item.id}
                 packImage={item.packImage}
                 packName={item.packName || "Untitled Pack"}
+                packProducts={item.packProducts || []}
                 stickerCount={item.packProducts?.length || 0}
                 packPrice={item.packPrice ?? 0}
+                packStatus={item.packStatus}
                 onAddToCart={
                   item.packStockQty <= 0 || item.packStatus === "unavailable"
                     ? undefined
