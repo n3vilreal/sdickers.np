@@ -25,3 +25,5 @@ export const uploadProductImage = async (file) => {
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(fileName);
   return data.publicUrl;
 };
+
+export const uploadImage = uploadProductImage;

@@ -8,6 +8,7 @@ const links = [
   { to: "/admin/packs", label: "Packs" },
   { to: "/admin/users", label: "Users" },
   { to: "/admin/orders", label: "Orders" },
+  { to: "/admin/payments", label: "Payments" },
 ];
 export default function AdminLayout() {
   const navigate = useNavigate();

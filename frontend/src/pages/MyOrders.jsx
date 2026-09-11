@@ -9,6 +9,8 @@ const statusColor = {
   Delivered: "text-[#00ff66]",
   Cancelled: "text-red-500",
 };
+const orderCode = (order) =>
+  `#${String(order._id).padStart(6, "0").slice(-6).toUpperCase()}`;
 export default function MyOrders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
@@ -56,7 +58,7 @@ export default function MyOrders() {
             >
               <div className="flex justify-between items-center flex-wrap gap-2">
                 <span className="text-xs text-[#8a8a8a]">
-                  Order #{order._id.slice(-6).toUpperCase()} ·{" "}
+                  {orderCode(order)} ·{" "}
                   {new Date(order.createdAt).toLocaleDateString()}
                 </span>
                 <span

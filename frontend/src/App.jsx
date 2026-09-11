@@ -19,6 +19,7 @@ import AdminProducts from './pages/admin/AdminProducts'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminPacks from './pages/admin/AdminPacks'
+import AdminPayments from './pages/admin/AdminPayments'
 function App() {
   const location = useLocation()
   const hideChrome =
@@ -73,6 +74,7 @@ function App() {
           <Route path="packs" element={<AdminPacks />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="orders" element={<AdminOrders />} />
+          <Route path="payments" element={<AdminPayments />} />
         </Route>
       </Routes>
       {/* {!hideChrome && <Footer />} */}

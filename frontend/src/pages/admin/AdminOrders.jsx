@@ -8,6 +8,8 @@ const STATUSES = [
   "Delivered",
   "Cancelled",
 ];
+const orderCode = (o) =>
+  `#${String(o._id).padStart(6, "0").slice(-6).toUpperCase()}`;
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ export default function AdminOrders() {
                 <React.Fragment key={o._id}>
                   <tr className="border-b border-[#2e2e2e]">
                     <td className="p-4 text-white">
-                      #{o._id.slice(-6).toUpperCase()}
+                      {orderCode(o)}
                       <div className="text-[10px] text-[#515151]">
                         {new Date(o.createdAt).toLocaleDateString()}
                       </div>

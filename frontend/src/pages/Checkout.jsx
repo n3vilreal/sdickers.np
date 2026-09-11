@@ -15,6 +15,7 @@ export default function Checkout() {
     deliveryAddress: "",
     paymentMethod: "Cash on Delivery",
   });
+  const [paymentSettings, setPaymentSettings] = useState([]);
   const fetchCart = async () => {
     try {
       const res = await api.get("/cart");
@@ -27,12 +28,19 @@ export default function Checkout() {
   };
   useEffect(() => {
     fetchCart();
+    api
+      .get("/payment-settings")
+      .then((res) => setPaymentSettings(res.data.data || []))
+      .catch(() => {});
   }, []);
   const itemPrice = (item) =>
     item.pack ? item.pack.packPrice : item.product.productPrice;
   const total = items.reduce(
     (sum, item) => sum + itemPrice(item) * item.quantity,
     0,
+  );
+  const selectedPayment = paymentSettings.find(
+    (s) => s.method === form.paymentMethod,
   );
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -132,6 +140,39 @@ export default function Checkout() {
               <option>eSewa</option>
               <option>Khalti</option>
             </select>
+            {selectedPayment?.qrImage ? (
+              <div className="mt-4 bg-black border border-[#2e2e2e] rounded-2xl p-5 flex flex-col items-center gap-3">
+                <span className="text-xs font-semibold text-white">
+                  SCAN TO PAY WITH {selectedPayment.method.toUpperCase()}
+                </span>
+                <div className="w-44 h-44 bg-white rounded-xl p-2">
+                  <img
+                    src={selectedPayment.qrImage}
+                    alt={`${selectedPayment.method} QR`}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                {selectedPayment.accountName && (
+                  <span className="text-[11px] text-[#8a8a8a]">
+                    Account: {selectedPayment.accountName}
+                    {selectedPayment.accountNumber
+                      ? ` · ${selectedPayment.accountNumber}`
+                      : ""}
+                  </span>
+                )}
+                {selectedPayment.instructions && (
+                  <span className="text-[11px] text-[#8a8a8a] text-center max-w-xs">
+                    {selectedPayment.instructions}
+                  </span>
+                )}
+                <span className="text-sm font-bold text-[#00ff66]">
+                  Amount: Rs. {total}
+                </span>
+              </div>
+            ) : null}
           </div>
           <button
             type="submit"
